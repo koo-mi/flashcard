@@ -1,7 +1,19 @@
-import { DataTypes } from 'sequelize';
+import { DataTypes, Model, Optional } from 'sequelize';
 import sequelize from '../config/database';
 
-const User = sequelize.define('User', {
+interface UserAttributes {
+  id: number;
+  username: string;
+  email?: string;
+  googleId?: string;
+  githubId?: string;
+  createdAt?: Date;
+  updatedAt?: Date;
+}
+
+interface UserCreationAttributes extends Optional<UserAttributes, 'id'> {}
+
+const User = sequelize.define<Model<UserAttributes, UserCreationAttributes>>('User', {
   id: {
     type: DataTypes.INTEGER,
     autoIncrement: true,
@@ -14,12 +26,18 @@ const User = sequelize.define('User', {
   },
   email: {
     type: DataTypes.STRING(100),
-    allowNull: false,
+    allowNull: true,
     unique: true,
   },
-  password: {
+  googleId: {
     type: DataTypes.STRING,
-    allowNull: false,
+    allowNull: true,  
+    unique: true,
+  },
+  githubId: {
+    type: DataTypes.STRING,
+    allowNull: true,  
+    unique: true,
   },
   createdAt: {
     type: DataTypes.DATE,
@@ -36,3 +54,4 @@ const User = sequelize.define('User', {
 });
 
 export default User;
+export type { UserAttributes };
